@@ -42,3 +42,21 @@ If you're interested in modding Vs. Dave & Bambi, feel free to read the [officia
 
 ## Contributing
 TODO.
+
+## Android Support
+I ported Dave And Bambi's Volume 1 to Android 2 days after the source code was released.
+
+Please Playtest this: https://drive.google.com/file/d/1x29g3fiwA-xXEyO3HlX9t3Ul7EYoDP-m/view?usp=sharing
+Share bugs via the Issues tab, this will help alot during the port.
+
+Anyways, if you see this:
+[Screenshot](https://media.discordapp.net/attachments/1323021749973024768/1444804638665736312/Screenshot_2025-11-30_213549.png?ex=692eb36d&is=692d61ed&hm=051d1e2fa700770711536a4236daf803160b5e361d4e6c0576e6cfaf77c221f6&=&format=webp&quality=lossless&width=1426&height=800)
+
+That means the app has installed successfully.
+
+Steps to play:
+1. Download an file explorer, such as "ZArchiver".
+2. Go to the directory you downloaded the apk in, should be this: [Screenshot](https://media.discordapp.net/attachments/1323021749973024768/1444810573505237093/Screenshot_20251130-140053.ZArchiver2.png?ex=692eb8f4&is=692d6774&hm=9306447e712bdcc31695058a163797c311a230bbc18eee05cba0fb8f10db524f&=&format=webp&quality=lossless&width=900&height=918)
+3. Go inside the assets folder, then copy the "assets" folder. (Yes, there are two assets folder).
+4. Copy and paste this to "/storage/emulated/0/Android/media/dnbteam.daveandbambi/" (or "Android/media/dnbteam.daveandbambi/").
+5. Restart the app. it should work!
