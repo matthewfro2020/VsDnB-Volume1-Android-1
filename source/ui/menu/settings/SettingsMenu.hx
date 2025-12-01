@@ -28,8 +28,9 @@ import ui.menu.settings.components.*;
 import util.FileUtil;
 import util.GradientUtil;
 import util.TweenUtil;
-
+#if mobileC
 import mobile.controls.MobileControlsSubState;
+#end
 
 enum SelectState
 {
@@ -37,7 +38,7 @@ enum SelectState
 	SelectingOption;
 }
 
-class SettingsMenu extends MusicBeatSubstate // a fix for now?
+class SettingsMenu extends MusicBeatSubstate // Originally was FlxSubstate, moved to MusicBeatSubstate for mobile controls.
 {
 	static var curCategorySelection:Int = 0;
 	
@@ -254,16 +255,17 @@ class SettingsMenu extends MusicBeatSubstate // a fix for now?
 				}
 		}
 
+		#if mobileC
+		if (mobileControls)
+		{
+			FlxG.switchState(() -> new MobileControlsSubState());
+		}
+		#end
+
 		if (back)
 		{
 			closeClipboard();
 		}
-		#if mobileC
-		if (mobileControls)
-		{
-			openSubState(new MobileControlsSubState()); // ahh so cool
-		}
-		#end
 	}
 
 	public override function close()

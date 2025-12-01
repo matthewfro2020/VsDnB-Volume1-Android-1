@@ -655,10 +655,6 @@ class PlayState extends MusicBeatState
 		initStage();
 		initCharacters();
 
-		#if mobileC
-		initalizeMobileControls();
-		#end
-
 		initalizeCamera();
 
 		initalizeUI();
@@ -666,6 +662,10 @@ class PlayState extends MusicBeatState
 		generateSong();
 
 		prepareSong();
+
+		#if mobileC
+		initalizeMobileControls();
+		#end
 
 		super.create();
 	}
@@ -676,7 +676,7 @@ class PlayState extends MusicBeatState
 
 		elapsedtime += elapsed;
 
-		if ((isInCutscene && FlxG.keys.justPressed.ESCAPE) || (FlxG.keys.justPressed.ENTER && Countdown.countdownStarted && canPause))
+		if ((isInCutscene && FlxG.keys.justPressed.ESCAPE #if android || FlxG.android.justReleased.BACK #end) || (FlxG.keys.justPressed.ENTER #if android || FlxG.android.justReleased.BACK #end && Countdown.countdownStarted && canPause))
 			runPause();
 
 		if (FlxG.keys.justPressed.SEVEN)

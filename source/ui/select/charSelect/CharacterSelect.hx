@@ -32,6 +32,10 @@ import play.stage.BGSprite;
 import play.song.Song;
 import ui.MusicBeatState;
 import ui.menu.freeplay.FreeplayState;
+#if mobile
+import util.SwipeUtil;
+import util.TouchUtil;
+#end
 
 typedef CharacterSelectParams = 
 {
@@ -301,7 +305,8 @@ class CharacterSelect extends MusicBeatState
 
 		#if mobileC
 		addVirtualPad(LEFT_FULL, A_B);
-		#end	
+		addVirtualPadCamera();
+		#end
 
 		super.create();
 	}
@@ -316,7 +321,6 @@ class CharacterSelect extends MusicBeatState
 
 			if (firstPressed != -1)
 			{
-				#if desktop
 				for (control => key in selectControls)
 				{
 					if (firstPressed == key)
@@ -335,16 +339,6 @@ class CharacterSelect extends MusicBeatState
 						}
 					}
 				}
-				#else
-				if (virtualPad.buttonLeft.justPressed)
-					changeRowSelection(-1);
-				if (virtualPad.buttonRight.justPressed)
-					changeRowSelection(1);
-				if (virtualPad.buttonUp.justPressed)
-					changeColumnSelection(-1);
-				if (virtualPad.buttonDown.justPressed)
-					changeColumnSelection(1);
-				#end
 
 				if (singControls.contains(firstPressed))
 				{
@@ -354,11 +348,21 @@ class CharacterSelect extends MusicBeatState
 					strumLine.strums.members[controlIndex].playAnim('confirm', true);
 				}
 			}
+			#if mobileC
+			if (virtualPad.buttonLeft.justPressed)
+				changeRowSelection(-1);
+			if (virtualPad.buttonDown.justPressed)
+				changeColumnSelection(1);
+			if (virtualPad.buttonUp.justPressed)
+				changeColumnSelection(-1);
+			if (virtualPad.buttonRight.justPressed)
+				changeRowSelection(1);
+			#end
 
 			if (controls.ACCEPT)
 				selectCharacter();
 
-			if (controls.BACK)
+			if (controls.BACK #if android || FlxG.android.justReleased.BACK #end)
 			{
 				SoundController.playMusic(Paths.music('freakyMenu'));
 				FlxG.switchState(() -> new FreeplayState());

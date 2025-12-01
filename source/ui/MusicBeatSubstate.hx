@@ -80,15 +80,20 @@ class MusicBeatSubstate extends ScriptEventDispatchSubState
 			remove(virtualPad);
 	}
 
-	public function addVirtualPadCamera(DefaultDrawTarget:Bool = true):Void
+	public function addVirtualPadCamera():Void
 	{
-		if (virtualPad != null)
-		{
-			var camControls:FlxCamera = new GameCamera();
-			camControls.bgColor.alpha = 0;
-			FlxG.cameras.add(camControls, DefaultDrawTarget);
-			virtualPad.cameras = [camControls];
-		}
+    	if (virtualPad != null)
+    	{
+        	var camControls:GameCamera = new GameCamera();
+        	camControls.bgColor = 0x00000000;
+
+        	FlxG.cameras.add(camControls, false);
+
+       		camControls.follow(null);
+        	camControls.scroll.set(0, 0);
+
+        	virtualPad.cameras = [camControls];
+    	}
 	}
 	#end
 

@@ -33,6 +33,10 @@ import ui.menu.MainMenuState;
 import api.Discord.DiscordClient;
 #end
 
+#if mobile
+import util.TouchUtil;
+#end
+
 using StringTools;
 
 class TitleState extends MusicBeatState
@@ -153,11 +157,8 @@ class TitleState extends MusicBeatState
 		}
 
 		#if mobile
-		for (touch in FlxG.touches.list)
-		{
-			if (touch.justPressed)
-				pressedEnter = true;
-		}
+		if (TouchUtil.justPressed)
+			pressedEnter = true;
 		#end
 
 		if (pressEnter != null && pressedEnter && !transitioning)

@@ -55,12 +55,15 @@ class MusicBeatState extends ScriptEventDispatchState
 	inline function get_controls():Controls
 		return PlayerSettings.controls;
 
-		#if mobileC
+	#if mobileC
 	var mobileControls:MobileControls;
 	var virtualPad:FlxVirtualPad;
 	var trackedInputsMobileControls:Array<FlxActionInput> = [];
 	var trackedInputsVirtualPad:Array<FlxActionInput> = [];
 
+	/**
+	 * Adds a Virtual Pad.
+	 */
 	public function addVirtualPad(DPad:FlxDPadMode, Action:FlxActionMode):Void
 	{
 		if (virtualPad != null)
@@ -74,6 +77,9 @@ class MusicBeatState extends ScriptEventDispatchState
 		controls.trackedInputsUI = [];
 	}
 
+	/**
+	 * Removes a Virtual Pad.
+	 */
 	public function removeVirtualPad():Void
 	{
 		if (trackedInputsVirtualPad.length > 0)
@@ -83,7 +89,10 @@ class MusicBeatState extends ScriptEventDispatchState
 			remove(virtualPad);
 	}
 
-	public function addMobileControls(DefaultDrawTarget:Bool = true):Void
+	/**
+	 * Adds Mobile Controls.
+	 */
+	public function addMobileControls():Void
 	{
 		if (mobileControls != null)
 			removeMobileControls();
@@ -98,21 +107,28 @@ class MusicBeatState extends ScriptEventDispatchState
 				controls.setVirtualPadNOTES(mobileControls.virtualPad, BOTH_FULL, NONE);
 			case 'Hitbox':
 				controls.setHitBox(mobileControls.hitbox);
-			case 'Keyboard': // do nothing
+			case 'Keyboard':
 		}
 
 		trackedInputsMobileControls = controls.trackedInputsNOTES;
 		controls.trackedInputsNOTES = [];
 
 		var camControls:GameCamera = new GameCamera();
-		camControls.bgColor.alpha = 0;
-		FlxG.cameras.add(camControls, DefaultDrawTarget);
+        camControls.bgColor = 0x00000000;
+
+        FlxG.cameras.add(camControls, false);
+
+       	camControls.follow(null);
+        camControls.scroll.set(0, 0);
 
 		mobileControls.cameras = [camControls];
 		mobileControls.visible = false;
 		add(mobileControls);
 	}
 
+	/**
+	 * Removes Mobile Controls.
+	 */
 	public function removeMobileControls():Void
 	{
 		if (trackedInputsMobileControls.length > 0)
@@ -122,15 +138,24 @@ class MusicBeatState extends ScriptEventDispatchState
 			remove(mobileControls);
 	}
 
-	public function addVirtualPadCamera(DefaultDrawTarget:Bool = true):Void
+	/**
+	 * Adds a Camera to the Virtual Pad.
+	 * Useful if the state/substate uses a camera.
+	 */
+	public function addVirtualPadCamera():Void
 	{
-		if (virtualPad != null)
-		{
-			var camControls:FlxCamera = new GameCamera();
-			camControls.bgColor.alpha = 0;
-			FlxG.cameras.add(camControls, DefaultDrawTarget);
-			virtualPad.cameras = [camControls];
-		}
+    	if (virtualPad != null)
+    	{
+        	var camControls:GameCamera = new GameCamera();
+        	camControls.bgColor = 0x00000000;
+
+        	FlxG.cameras.add(camControls, false);
+
+       		camControls.follow(null);
+        	camControls.scroll.set(0, 0);
+
+        	virtualPad.cameras = [camControls];
+    	}
 	}
 	#end
 
