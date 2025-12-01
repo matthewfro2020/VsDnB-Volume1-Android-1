@@ -50,23 +50,18 @@ class FileUtil
     
     /**
      * Creates a new directory a specified 'path', will make a new directory if one isn't made already.
-	 * Variable 'fullPath' detects if you are on android and adds the storage directory to the path.
      * @param path The path to create a directory in.
      */
     public static function createDirectory(path:String)
-	{
-    	var fullPath:String;
-
-    	#if android
-    	fullPath = SUtil.getStorageDirectory() + path;
-    	#else
-    	fullPath = path;
-    	#end
-
-    	if (!FileSystem.exists(fullPath)) {
-        	FileSystem.createDirectory(fullPath);
-    	}
-	}
+    {
+		#if desktop
+        if (!FileSystem.exists(path)) {
+            FileSystem.createDirectory(path);
+        }
+		#else
+		SUtil.mkDirs(path);
+		#end
+    }
 
     /**
      * Opens a file at the specified 'path', works on all platforms.
