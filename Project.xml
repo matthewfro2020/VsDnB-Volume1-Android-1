@@ -22,7 +22,7 @@
 	<window if="mac" orientation="auto" fullscreen="false" resizable="true" vsync="false" allow-high-dpi="true" />
 
 	<!--Mobile-->
-	<window if="mobile" orientation="landscape" fullscreen="true" resizable="false" allow-shaders="true" require-shaders="true" allow-high-dpi="true" />
+	<window if="mobile" orientation="landscape" fullscreen="true" width="1280" height="720" resizable="false"/>
 	<!-- _____________________________ Path Settings ____________________________ -->
 
 	<classpath name="source" />

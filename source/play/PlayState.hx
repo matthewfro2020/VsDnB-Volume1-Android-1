@@ -1274,6 +1274,10 @@ class PlayState extends MusicBeatState
 		#if mobileC
 		addMobileControls();
 		mobileControls.visible = true;
+
+		if (shapeNoteSongs.contains(currentSong.id.toLowerCase()))
+			addVirtualPad(NONE, A);
+			addVirtualPadCamera();
 		#end
 	}
 
@@ -1714,7 +1718,7 @@ class PlayState extends MusicBeatState
 		var downR = controls.DOWN_R;
 		var leftR = controls.LEFT_R;
 		
-		var key5 = controls.KEY5 && shapeNoteSongs.contains(currentSong.id.toLowerCase());
+		var key5 = controls.KEY5 #if mobileC || virtualPad.buttonA.pressed #end && shapeNoteSongs.contains(currentSong.id.toLowerCase());
 
 		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
 		var releaseArray:Array<Bool> = [leftR, downR, upR, rightR];
