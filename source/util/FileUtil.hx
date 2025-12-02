@@ -61,7 +61,7 @@ class FileUtil
 		#end
 		
         if (!FileSystem.exists(finalPath)) {
-            FileSystem.createDirectory(SUtil.getStorageDirectory() + finalPath);
+            FileSystem.createDirectory(finalPath);
         }
     }
 
