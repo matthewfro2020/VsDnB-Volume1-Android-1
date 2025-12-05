@@ -384,6 +384,9 @@ class MainMenuState extends MusicBeatState
 						firstStart = true;
 						transitionItems();
 					}
+					#if mobileC
+					removeVirtualPad();
+					#end
 					openSubState(settings);
 				case 'credits':
 					FlxG.switchState(() -> new CreditsMenuState());

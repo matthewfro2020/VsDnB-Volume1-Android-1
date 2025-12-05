@@ -20,6 +20,7 @@ import flixel.util.FlxTimer;
 import flixel.util.FlxSignal;
 
 import play.PauseSubState;
+import ui.menu.MainMenuState;
 
 import graphics.GameCamera;
 
@@ -323,6 +324,11 @@ class SettingsMenu extends MusicBeatSubstate // Originally was FlxSubstate, move
     								var pause = cast(self._parentState, PauseSubState);
     								pause.addVirtualPad(UP_DOWN, A);
 									pause.addVirtualPadCamera();
+								}
+								if (self._parentState != null && Std.isOfType(self._parentState, MainMenuState))
+								{
+    								var main = cast(self._parentState, MainMenuState);
+    								main.addVirtualPad(LEFT_RIGHT, A_B);
 								}
 								#end
                             	self.close();
