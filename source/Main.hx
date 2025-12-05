@@ -75,6 +75,12 @@ class Main extends Sprite
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
+		#if mobile
+		gameWidth = 1280;
+		gameHeight = 720;
+		zoom = 1;
+		#end
+
 		if (zoom == -1)
 		{
 			var ratioX:Float = stageWidth / gameWidth;

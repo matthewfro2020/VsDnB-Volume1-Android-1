@@ -143,6 +143,15 @@
     	</config>
 	</section>
 
+	<android>
+    	<manifest-addition>
+        	<![CDATA[
+        	<application android:requestLegacyExternalStorage="true">
+        	</application>
+        	]]>
+    	</manifest-addition>
+	</android>
+
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
