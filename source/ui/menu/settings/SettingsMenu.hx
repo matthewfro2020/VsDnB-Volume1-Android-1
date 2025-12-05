@@ -19,6 +19,8 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.util.FlxSignal;
 
+import play.PauseSubState;
+
 import graphics.GameCamera;
 
 import ui.menu.settings.*;
@@ -295,31 +297,41 @@ class SettingsMenu extends MusicBeatSubstate // Originally was FlxSubstate, move
 		});
 	}
 
-	public function closeClipboard()
+	public function closeClipboard():Void
 	{
-		canInteract = false;
-		
-		var sineOutStep:EaseFunction = TweenUtil.easeSteps(20, FlxEase.sineOut);
+    	canInteract = false;
+    	var self = this;
 
-		new FlxTimer().start(0.5, function(timer:FlxTimer)
-		{
-			FlxTween.tween(clipboard, {y: clipboard.height}, 0.5, {
-				ease: sineOutStep,
-				onComplete: function(t:FlxTween)
-				{
-					new FlxTimer().start(0.2, function(timer:FlxTimer)
-					{
-						FlxTween.tween(bg, {alpha: 0}, 0.5, {
-							ease: sineOutStep,
-							onComplete: function(t:FlxTween)
-							{
-								close();
-							}
-						});
-					});
-				}
-			});
-		});
+    	var sineOutStep:EaseFunction = TweenUtil.easeSteps(20, FlxEase.sineOut);
+
+    	new FlxTimer().start(0.5, function(timer:FlxTimer)
+   		{
+        	FlxTween.tween(self.clipboard, {y: self.clipboard.height}, 0.5, {
+            	ease: sineOutStep,
+            	onComplete: function(t:FlxTween)
+            	{
+                	new FlxTimer().start(0.2, function(timer:FlxTimer)
+                	{
+                    	FlxTween.tween(self.bg, { alpha: 0 }, 0.5, {
+                        	ease: sineOutStep,
+                        	onComplete: function(t:FlxTween)
+                        	{
+								// Re-adds the Virtual Pad into Pause Menu, had to do some workarounds.
+                            	#if mobileC
+								if (self._parentState != null && Std.isOfType(self._parentState, PauseSubState))
+								{
+    								var pause = cast(self._parentState, PauseSubState);
+    								pause.addVirtualPad(UP_DOWN, A);
+									pause.addVirtualPadCamera();
+								}
+								#end
+                            	self.close();
+                        	}
+                    	});
+                	});
+            	}
+        	});
+    	});
 	}
 
 	public function changeCategorySelection(selection:Int)
