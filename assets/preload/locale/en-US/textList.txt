@@ -38,6 +38,7 @@ rapTwo_hint==I am Dave and I have a mod.
 freeplay_score==Score
 freeplay_altInstrumental==Press Alt To Play The Current Song's Instrumental
 freeplay_skipChar==Hold CTRL To Skip Character Select
+freeplay_skipChar_mobile==Hold the C Button To Skip Character Select
 
 // Pause State //
 pause_Resume==Resume
