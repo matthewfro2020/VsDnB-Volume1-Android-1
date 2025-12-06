@@ -42,6 +42,7 @@ class Options_Window extends SettingsCategory
 		list.push(stepper_fps);
 		add(stepper_fps);
 
+		#if !mobile
 		var checkbox_borderless = new CheckboxOption(400, 400, {
 			name: LanguageManager.getTextString('settings_window_borderless'),
 			description: LanguageManager.getTextString('settings_window_borderless_description'),
@@ -55,6 +56,7 @@ class Options_Window extends SettingsCategory
 		checkbox_borderless.setChecked(Preferences.borderless, false, true);
 		list.push(checkbox_borderless);
 		add(checkbox_borderless);
+		#end
 
 		var checkbox_vsync = new CheckboxOption(400, 500, {
 			name: LanguageManager.getTextString('settings_window_VSync'),

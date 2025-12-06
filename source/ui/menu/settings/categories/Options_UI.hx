@@ -20,7 +20,7 @@ class Options_UI extends SettingsCategory
 			callback: function(value:Bool)
 			{
 				Preferences.minimalUI = value;
-				Main.fps.visible = value ? false : checkbox_debugUI.checked;
+				#if !mobile Main.fps.visible = value ? false : checkbox_debugUI.checked; #end
 
 				checkbox_debugUI.canInteract = !Preferences.minimalUI;
 				select_timerType.canInteract = !Preferences.minimalUI;
@@ -30,6 +30,8 @@ class Options_UI extends SettingsCategory
 		list.push(checkbox_minimalUI);
 		add(checkbox_minimalUI);
 
+
+		#if !mobile
 		checkbox_debugUI = new CheckboxOption(400, 400, {
 			name: LanguageManager.getTextString('settings_ui_debugUI'),
 			description: LanguageManager.getTextString('settings_ui_debugUI_description'),
@@ -42,6 +44,7 @@ class Options_UI extends SettingsCategory
 		checkbox_debugUI.canInteract = !Preferences.minimalUI;
 		list.push(checkbox_debugUI);
 		add(checkbox_debugUI);
+		#end
 
 		select_timerType = new SelectOption(400, 500, {
 			name: LanguageManager.getTextString('settings_ui_timerType'),
