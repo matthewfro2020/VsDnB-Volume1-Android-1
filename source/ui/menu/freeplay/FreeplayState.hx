@@ -519,7 +519,7 @@ class FreeplayState extends MusicBeatState
 						PlayStatePlaylist.isStoryMode = false;
 						PlayStatePlaylist.storyWeek = songs[curSelected].week;
 
-						if (FlxG.keys.pressed.CONTROL || skipSelect.contains(song.id.toLowerCase()))
+						if (FlxG.keys.pressed.CONTROL #if mobileC || virtualPad.buttonC.pressed #end || skipSelect.contains(song.id.toLowerCase()))
 						{
 							LoadingState.loadAndSwitchState(() -> new PlayState({
 								targetSong: song,
