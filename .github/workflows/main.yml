@@ -54,6 +54,10 @@ jobs:
       - uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.4
+      - name: Setup Haxe Path
+        run: |
+          setx HAXEPATH "C:\HaxeToolkit\haxe"
+          setx PATH "%HAXEPATH%;%PATH%"
       # Runs a set of commands using the runners shell
       - name: Install Haxelib
         run: |
@@ -62,7 +66,6 @@ jobs:
           haxelib run hmm setup
           hmm install
           haxelib list
-        shell: cmd
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
       - name: Compile
