@@ -99,7 +99,11 @@ class HudTimer extends FlxSpriteGroup implements IHudItem
 	 * The text that displays information on the song's time.
 	 */
 	var timerText:FlxText;
-
+	
+	/**
+	 * Idk what this does but it works
+	 */
+	var fontScaler:Int = 1;
 	
 	public function new(x:Float = 0, y:Float = 0, opponent:Character, scrollType:String, type:String)
 	{
@@ -134,8 +138,8 @@ class HudTimer extends FlxSpriteGroup implements IHudItem
 		insert(members.indexOf(timerGraphic), pieTimer);
 
 		timerText = new FlxText(0, (timerGraphic.y - this.y) + timerGraphic.height - 5, 0, "0:00", 24);
-		timerText.setFormat(Paths.font("comic.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		timerText.borderSize = 2.5;
+		timerText.setFormat(Paths.font("comic.ttf"), 24 * fontScaler, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		timerText.borderSize = 2.5 * fontScaler;
 		timerText.active = false;
 		add(timerText);
 		timerText.x = timerGraphic.x + (timerGraphic.width - timerText.textField.textWidth) / 2;
