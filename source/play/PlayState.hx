@@ -214,6 +214,225 @@ class PlayState extends MusicBeatState
 	 */
 	private var elapsedtime:Float = 0;
 
+		
+public var botplayEnabled:Bool = false;
+private var botplayTxt:FlxText;
+public static var botplay:Bool = false;
+
+private function botplayHit(note:Note)
+{
+    // Mark as hit
+    note.hasBeenHit = true;
+
+    // Internal scoring logic
+    playingStrumline.hitNote(note);
+
+    // Trigger player animation
+    if (playingChar != null)
+    {
+        playingChar.sing(note.direction);
+        playingChar.holdTimer = 0;
+    }
+}
+
+/**
+ * Auto-player for D&B engine (FULL + FIXED FOR SUSTAINS)
+ */
+public function botplayAutoHit()
+{
+    if (playerStrums == null)
+        return;
+
+    // Show BOTPLAY text
+    botplayTxt.visible = true;
+
+    // 1. ALL hittable "tap" notes
+    var possible:Array<Note> = playerStrums.getPossibleNotes();
+
+    // Sort closest → furthest
+    haxe.ds.ArraySort.sort(possible, function(a, b)
+    {
+        return Reflect.compare(
+            Math.abs(Conductor.instance.songPosition - a.strumTime),
+            Math.abs(Conductor.instance.songPosition - b.strumTime)
+        );
+    });
+
+    // ================================
+    //  TAP NOTES
+    // ================================
+    for (note in possible)
+    {
+        if (note == null) continue;
+        if (note.hasBeenHit) continue;
+
+        // SUSTAIN HEAD (first part)
+        if (note.sustainNote != null)
+        {
+            // Hit the head
+            playerStrums.pressKey(note.direction);
+            playerStrums.hitNote(note);
+            continue;
+        }
+		// BOTPLAY NOTE LOGIC WITH PHONE SUPPORT
+playerStrums.pressKey(note.direction);
+playerStrums.hitNote(note);
+
+// --- PHONE NOTE DODGE PATCH ---
+if (note.noteStyle == "phone" || note.noteStyle == "phone-alt")
+{
+    // play BF/Player dodge animation
+    if (playingChar.animation.getByName("dodge") != null)
+        playingChar.playAnim("dodge", true);
+    else if (playingChar.animation.getByName("hey") != null)
+        playingChar.playAnim("hey", true);
+    else
+        playingChar.sing(note.direction); // fallback
+
+    // play opponent (dad) throwing animation
+    if (opposingChar.animation.getByName("singThrow") != null)
+        opposingChar.playAnim("singThrow", true);
+    else
+        opposingChar.playAnim("singSmash", true);
+
+    // GF cheer if she can
+    if (gf != null && gf.animation.getByName("cheer") != null)
+        gf.playAnim("cheer", true);
+}
+// --------------------------------
+
+playerStrums.releaseKey(note.direction);
+
+    }
+
+    // ================================
+    //  SUSTAIN NOTE HOLDING
+    // ================================
+    playerStrums.forEachHoldNote(function(s:SustainNote)
+    {
+        if (s == null) return;
+
+        var now = Conductor.instance.songPosition;
+
+        // Sustain active window
+        var start = s.strumTime;
+        var end   = s.strumTime + s.fullSustainLength;
+
+        if (now >= start && now <= end)
+        {
+            // Hold key while inside sustain window
+            playerStrums.pressKey(s.direction);
+
+            if (!s.hasBeenHit)
+            {
+                s.hasBeenHit = true;
+                s.hasMissed = false;
+            }
+
+            // Play strum hold animation
+            playerStrums.strums.members[s.direction].holdConfirm();
+        }
+        else if (now > end)
+        {
+            // Release key when sustain ends
+            playerStrums.releaseKey(s.direction);
+        }
+    });
+}
+
+/**
+ * Automatically plays notes for the player strumline.
+ */
+ 
+public var strumlineOpponent:Strumline;
+public var strumlinePlayer:Strumline;
+
+function updateBotplay(elapsed:Float)
+{
+    if (!botplay) return;
+
+    // Your player strumline:
+    var pl:Strumline = strumlinePlayer; // adjust if player index differs
+
+    // Get all notes that are hittable
+    var possibleNotes:Array<Note> = pl.getPossibleNotes();
+
+    // Sort by closest to hit
+    possibleNotes.sort(function(a, b) {
+        return Reflect.compare(
+            Math.abs(Conductor.instance.songPosition - a.strumTime),
+            Math.abs(Conductor.instance.songPosition - b.strumTime)
+        );
+    });
+
+    // ---- HIT TAPS ----
+    for (note in possibleNotes)
+    {
+        if (note == null) continue;
+        if (note.hasBeenHit) continue;
+if (note.sustainNote == null)
+{
+    pl.pressKey(note.direction);
+    pl.hitNote(note);
+
+    // --- PHONE NOTE AUTO-DODGE ---
+    if (note.noteStyle == "phone" || note.noteStyle == "phone-alt")
+    {
+        if (playingChar.animation.getByName("dodge") != null)
+            playingChar.playAnim("dodge", true);
+        else if (playingChar.animation.getByName("hey") != null)
+            playingChar.playAnim("hey", true);
+
+        if (opposingChar.animation.getByName("singThrow") != null)
+            opposingChar.playAnim("singThrow", true);
+        else
+            opposingChar.playAnim("singSmash", true);
+
+        if (gf != null && gf.animation.getByName("cheer") != null)
+            gf.playAnim("cheer", true);
+    }
+    // -----------------------------
+
+    pl.releaseKey(note.direction);
+}
+        else
+        {
+            // HIT START OF HOLD
+            if (!note.sustainNote.hasBeenHit)
+            {
+                pl.pressKey(note.direction);
+                pl.hitNote(note);
+            }
+        }
+    }
+
+    // ---- HOLD SUSTAINS ----
+    pl.forEachHoldNote(function(hold:SustainNote)
+    {
+        if (hold == null) return;
+
+        var now = Conductor.instance.songPosition;
+
+        // Sustain active window
+        if (now >= hold.strumTime && now <= hold.strumTime + hold.fullSustainLength)
+        {
+            // keep key held
+            pl.pressKey(hold.direction);
+
+            if (!hold.hasBeenHit)
+            {
+                hold.hasBeenHit = true;
+                hold.hasMissed = false;
+            }
+        }
+        else
+        {
+            // release when finished
+            pl.releaseKey(hold.direction);
+        }
+    });
+}
+
 	/**
 	 * The current scrollType being used right now.
 	 * Changes the y position of all of the HUD elements based on this type.
@@ -659,6 +878,35 @@ class PlayState extends MusicBeatState
 
 		initalizeUI();
 
+		var font:String = Paths.font("comic.ttf");
+
+botplayTxt = new FlxText(
+    healthBar.x + healthBar.width / 2 - 75,
+    healthBar.y + (FlxG.save.data.downscroll ? 100 : -100),
+    0,
+    "BOTPLAY",
+    20
+);
+
+botplayTxt.setFormat(
+    Paths.font("comic.ttf"),
+    42,
+    FlxColor.WHITE,
+    CENTER,
+    OUTLINE,
+    FlxColor.BLACK
+);
+
+botplayTxt.scrollFactor.set(0, 0); // must supply values
+botplayTxt.borderSize = 3;
+botplayTxt.cameras = [camHUD];
+
+// Initialize botplay state from preferences
+botplay = Preferences.botplay;
+botplayTxt.visible = botplay;
+
+add(botplayTxt);
+
 		generateSong();
 
 		prepareSong();
@@ -678,6 +926,22 @@ class PlayState extends MusicBeatState
 
 		if ((isInCutscene && FlxG.keys.justPressed.ESCAPE #if android || FlxG.android.justReleased.BACK #end) || (FlxG.keys.justPressed.ENTER #if android || FlxG.android.justReleased.BACK #end && Countdown.countdownStarted && canPause))
 			runPause();
+
+	// BOTPLAY INPUT CONTROLLER
+	if (!isInCutscene)
+	{
+		if (Preferences.botplay)
+		{
+			botplay = true;
+			botplayTxt.visible = true;
+			botplayAutoHit();
+		}
+		else
+		{
+			botplay = false;
+			botplayTxt.visible = false;
+		}
+	}
 
 		if (FlxG.keys.justPressed.SEVEN)
 		{
@@ -1064,6 +1328,10 @@ class PlayState extends MusicBeatState
 				{
 					SoundController.cache(Paths.sound('note_click'));
 				}
+			case 'botplay':
+				// Keep PlayState.botplay and botplayTxt in sync with preferences
+				botplay = value;
+				if (botplayTxt != null) botplayTxt.visible = botplay;
 			case 'minimalUI':
 				#if !mobile Main.fps.visible = value ? false : Preferences.debugUI; #end
 		}
@@ -2160,6 +2428,25 @@ class PlayState extends MusicBeatState
 		var score:Int = 350;
 
 		var daRating:String = "sick";
+
+		// If botplay is enabled, always treat hits as perfect ('sick') and
+		// short-circuit the normal timing-based judgement.
+		if (botplay)
+		{
+			// award perfect note
+			totalNotesHit += 1;
+			if (!noMiss)
+			{
+				songScore += score;
+			}
+			ratings.ratingPopup("sick", combo, note.noteStyle);
+
+			#if desktop
+			changePresence(NORMAL(true, false));
+			#end
+
+			return;
+		}
 
 		if (noteDiff > Conductor.instance.safeZoneOffset * 2)
 		{
