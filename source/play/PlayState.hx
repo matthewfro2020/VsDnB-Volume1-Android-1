@@ -215,6 +215,8 @@ class PlayState extends MusicBeatState
 	 */
 	private var elapsedtime:Float = 0;
 
+	var fontScaler:Int = 1;
+
 		
 public var botplayEnabled:Bool = false;
 private var botplayTxt:FlxText;
@@ -891,7 +893,7 @@ botplayTxt = new FlxText(
 
 botplayTxt.setFormat(
     Paths.font("comic.ttf"),
-    42,
+    42 * fontScaler,
     FlxColor.WHITE,
     CENTER,
     OUTLINE,
@@ -899,7 +901,7 @@ botplayTxt.setFormat(
 );
 
 botplayTxt.scrollFactor.set(0, 0); // must supply values
-botplayTxt.borderSize = 3;
+botplayTxt.borderSize = 3 * fontScaler;
 botplayTxt.cameras = [camHUD];
 
 // Initialize botplay state from preferences
