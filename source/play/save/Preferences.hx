@@ -50,7 +50,8 @@ class Preferences
 		'vsync' => true,
 		'fps' => 144,
 		'borderless' => false,
-		'darkMode' => false,
+		'darkMode' => false,	
+        'botplay' => false
 	];
 
 	/**
@@ -166,6 +167,21 @@ class Preferences
 	{
 		return save?.data?.cutscenes;
 	}
+
+public static var botplay(get, set):Bool;
+
+static function set_botplay(value:Bool):Bool
+{
+    save.data.botplay = value;
+    save.flush();
+    onPreferenceChanged.dispatch('botplay', value);
+    return value;
+}
+
+static function get_botplay():Bool
+{
+    return save?.data?.botplay;
+}
 
 	// ACCESSIBILITY //
 
