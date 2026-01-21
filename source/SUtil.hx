@@ -53,10 +53,8 @@ class SUtil
 				System.exit(1);
 			}
 		}
-
-		if (Permissions.getGrantedPermissions().contains(Permissions.WRITE_EXTERNAL_STORAGE)
-			&& Permissions.getGrantedPermissions().contains(Permissions.READ_EXTERNAL_STORAGE))
-		{
+		#end
+		
 			if (!FileSystem.exists(SUtil.getPath()))
 				FileSystem.createDirectory(SUtil.getPath());
 
@@ -65,8 +63,6 @@ class SUtil
 
 			if (!FileSystem.exists(SUtil.getPath() + 'mods/modpacks-goes-here.txt'))
 				File.saveContent(SUtil.getPath() + 'mods/modpacks-goes-here.txt', '');
-		}
-		#end
 	}
 
 	/**
