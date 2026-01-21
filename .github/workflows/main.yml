@@ -33,7 +33,7 @@ jobs:
           haxelib setup ~/haxelib
           haxelib install hmm
           haxelib run hmm setup
-          hmm install
+          haxelib run hmm install
           haxelib list
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
@@ -64,7 +64,7 @@ jobs:
           haxelib setup C:/haxelib
           haxelib install hmm
           haxelib run hmm setup
-          hmm install
+          haxelib run hmm install
           haxelib list
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
@@ -91,7 +91,7 @@ jobs:
           haxelib setup ~/haxelib
           haxelib install hmm
           haxelib run hmm setup
-          hmm install
+          haxelib run hmm install
           haxelib list
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
